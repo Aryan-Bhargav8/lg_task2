@@ -95,6 +95,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () async{
                   SSH ssh = SSH();
                   await ssh.connectToLG();
+
                   await ssh.sendModel();
                   print('sending 3D house');
 

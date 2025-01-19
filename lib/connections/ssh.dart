@@ -232,33 +232,44 @@ fi
   Future<void> sendModel() async {
     try {
       //read the KML files
-      // final modelDae= await rootBundle.loadString('assets/model.dae');
+      print('function starts here');
+      final modelDae= await rootBundle.loadString('assets/model.dae');
       final houseKML= await rootBundle.loadString('assets/House.kml');
+      print(houseKML);
 
       final tempDir = await getTemporaryDirectory();
-      // final modelPath = '${tempDir.path}/model.dae';
+      final modelPath = '${tempDir.path}/model.dae';
       final housePath = '${tempDir.path}/House.kml';
 
       //saving the KML files to the temporary directory
-      // await File(modelPath).writeAsString(modelDae);
-      await File(housePath).writeAsString(houseKML);
+      await File(modelPath).writeAsString(modelDae);
+      await File(housePath).writeAsString(houseKML, mode: FileMode.write);
+
+      // Validate the written files
+      final writtenHouseKML = await File(housePath).readAsString();
+      print('Written House.kml content:\n$writtenHouseKML');
+
+      // Check for anomalies in written content
+      if (houseKML.trim() != writtenHouseKML.trim()) {
+        throw Exception('House.kml file content mismatch after writing.');
+      }
 
       //upload the KML files to the Liquid Galaxy
-      // await uploadFile(modelPath, '/var/www/html/model.dae');
+      await uploadFile(modelPath, '/var/www/html/model.dae');
       await uploadFile(housePath, '/var/www/html/House.kml');
 
       //write to kmls.txt
-      final flyToCmd = 'echo "flytoview=<LookAt><longitude>76.648497</longitude><latitude>35.444991</latitude><range>5000</range><tilt>60</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode><gx:duration>5.0</gx:duration><gx:flyToMode>smooth</gx:flyToMode></LookAt>" > /tmp/query.txt';
+      final flyToCmd = 'echo "flytoview=<LookAt><longitude>76.648497</longitude><latitude>35.444991</latitude><range>5000</range><tilt>40</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode><gx:duration>5.0</gx:duration><gx:flyToMode>smooth</gx:flyToMode></LookAt>" > /tmp/query.txt';
       await _client!.execute(flyToCmd);
       await Future.delayed(const Duration(seconds: 3));
       // await _client!.execute('echo "http://lg1:81/model.dae" > /var/www/html/kmls.txt');
-      await _client!.execute('echo "http://lg1:81/House.kml" >> /var/www/html/kmls.txt');
+      await _client!.execute('echo "http://lg1:81/House.kml" > /var/www/html/kmls.txt');
 
       // Ensure content is visible
-      // await Future.delayed(const Duration(seconds: 1));
-      // await _client!.execute('echo "playtour=Refresh" > /tmp/query.txt');
-      // await Future.delayed(const Duration(milliseconds: 500));
-      // await _client!.execute('echo "exittour=true" > /tmp/query.txt');
+      await Future.delayed(const Duration(seconds: 1));
+      await _client!.execute('echo "playtour=Refresh" > /tmp/query.txt');
+      await Future.delayed(const Duration(milliseconds: 500));
+      await _client!.execute('echo "exittour=true" > /tmp/query.txt');
     } catch (e) {
       print('Failed to send 3D House KML: $e');
     }
@@ -269,6 +280,7 @@ fi
     try {
       //write to kmls.txt
       await _client!.execute('> /var/www/html/kmls.txt');
+      await Future.delayed(const Duration(seconds: 3));
       final flyToCmd = 'echo "flytoview=<LookAt><longitude>0</longitude><latitude>0</latitude><range>10000000</range><tilt>0</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>" > /tmp/query.txt';
       await _client!.execute(flyToCmd);
       await Future.delayed(const Duration(seconds: 3));
