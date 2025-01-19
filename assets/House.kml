@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Placemark>
+    <name>3D House</name>
+    <description>Simple house model in the mountains</description>
+    <Model>
+      <altitudeMode>relativeToGround</altitudeMode>
+      <Location>
+        <longitude>76.648497</longitude>
+        <latitude>35.444991</latitude>
+        <altitude>-150</altitude>
+      </Location>
+      <Orientation>
+        <heading>0</heading>
+        <tilt>0</tilt>
+        <roll>0</roll>
+      </Orientation>
+      <Scale>
+        <x>1</x>
+        <y>1</y>
+        <z>1</z>
+      </Scale>
+      <Link>
+        <href>http://lg1:81/model.dae</href>
+      </Link>
+    </Model>
+  </Placemark>
+</kml>
