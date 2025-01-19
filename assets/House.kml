@@ -21,7 +21,7 @@
         <z>1</z>
       </Scale>
       <Link>
-        <href>http://lg1:81/model.dae</href>
+        <href>https://raw.githubusercontent.com/Aryan-Bhargav8/lg_task2/refs/heads/master/assets/model.dae</href>
       </Link>
     </Model>
   </Placemark>
